@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ChantXML Extension Plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #ffffff;
+        --fg: #111111;
+        --muted: #666666;
+        --card: #f5f5f5;
+        --accent: #174ea6;
+        --border: #d7d7d7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1115;
+          --fg: #e7e9ee;
+          --muted: #b3b8c4;
+          --card: #171b24;
+          --accent: #8ab4f8;
+          --border: #2e3440;
+        }
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+      }
+
+      h1, h2, h3 { line-height: 1.2; }
+      a { color: var(--accent); }
+
+      .lead { color: var(--muted); font-size: 1.08rem; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+      }
+
+      th, td {
+        border: 1px solid var(--border);
+        padding: 0.55rem;
+        vertical-align: top;
+      }
+
+      th { text-align: left; }
+
+      code, pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      pre {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.8rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="./index.html">← Back to ChantXML home</a></p>
+      <h1>Minimal MusicXML Extension Plan for Gregorian Chant</h1>
+      <p class="lead">
+        This plan defines how ChantXML should extend or profile MusicXML with the
+        smallest practical set of additions needed to preserve Gregorian chant
+        semantics and enable reliable conversion with GABC and TeX workflows.
+      </p>
+
+      <section>
+        <h2>Design principles</h2>
+        <ul>
+          <li><strong>Minimality:</strong> Use existing MusicXML elements whenever possible.</li>
+          <li><strong>Interoperability:</strong> Keep documents readable by generic MusicXML tooling.</li>
+          <li><strong>Round-trip fidelity:</strong> Preserve enough detail for <code>gabc → chantxml → gabc</code>.</li>
+          <li><strong>Explicit metadata:</strong> Store chant-only details in namespaced extension attributes/elements.</li>
+          <li><strong>Traceability:</strong> Keep source token hints to improve deterministic back-conversion.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Proposed extension strategy</h2>
+        <div class="card">
+          <p>
+            ChantXML should begin as a <em>profile</em> of MusicXML 4.0 plus a small
+            namespaced extension set (provisionally <code>xmlns:chant="https://chantxml.org/ns/1"</code>).
+            The profile defines constraints, while the namespace carries chant-specific data
+            not safely representable in base MusicXML.
+          </p>
+        </div>
+
+        <h3>Where extensions are expected</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>MusicXML area</th>
+              <th>Use in ChantXML</th>
+              <th>Extension need</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>&lt;note&gt;</code> and pitch info</td>
+              <td>Represent chant pitch events and neume grouping anchors</td>
+              <td>Neume/group IDs, liquescent flags, ornamental marks</td>
+            </tr>
+            <tr>
+              <td><code>&lt;notations&gt;</code></td>
+              <td>Attach neume/rhythmic semantics to notes</td>
+              <td>Chant-specific notation vocabulary</td>
+            </tr>
+            <tr>
+              <td><code>&lt;lyric&gt;</code></td>
+              <td>Text underlay and syllable alignment</td>
+              <td>Extended underlay behavior and melisma hints</td>
+            </tr>
+            <tr>
+              <td>Score-level metadata</td>
+              <td>Mode, office/mass context, source references</td>
+              <td>Chant metadata block and source provenance</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Feature mapping plan (GABC ↔ ChantXML)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Primary MusicXML representation</th>
+              <th>Chant extension payload</th>
+              <th>Round-trip notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Neume groupings</td>
+              <td>Sequential notes with grouping conventions</td>
+              <td><code>chant:neume-id</code>, <code>chant:neume-type</code></td>
+              <td>Preserve original grouping boundaries from GABC tokens</td>
+            </tr>
+            <tr>
+              <td>Liquescent forms</td>
+              <td>Note-level notation markers</td>
+              <td><code>chant:liquescent="true|type"</code></td>
+              <td>Must retain subtype for deterministic GABC regeneration</td>
+            </tr>
+            <tr>
+              <td>Episema / ictus-like marks</td>
+              <td>Notation attachments</td>
+              <td><code>chant:rhythmic-mark</code> vocabulary</td>
+              <td>Allow multiple marks per neume when needed</td>
+            </tr>
+            <tr>
+              <td>Text underlay behavior</td>
+              <td><code>&lt;lyric&gt;</code>, syllabic structure</td>
+              <td><code>chant:underlay-rule</code></td>
+              <td>Store explicit hints where base mapping is ambiguous</td>
+            </tr>
+            <tr>
+              <td>Source token provenance</td>
+              <td>n/a</td>
+              <td><code>chant:source-token</code></td>
+              <td>Optional but recommended for lossless re-export</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Normative profile deliverables</h2>
+        <ol>
+          <li><strong>ChantXML Profile Spec:</strong> required/forbidden MusicXML constructs for chant files.</li>
+          <li><strong>Extension Namespace Spec:</strong> definitions for all <code>chant:*</code> fields.</li>
+          <li><strong>Mapping Tables:</strong> canonical GABC token mappings and edge-case behavior.</li>
+          <li><strong>Conformance Levels:</strong> importer/exporter support levels and compatibility targets.</li>
+          <li><strong>Examples Corpus:</strong> curated chant fixtures with expected round-trip output.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Milestone plan</h2>
+        <h3>M1 — Core profile</h3>
+        <ul>
+          <li>Freeze initial namespace and required metadata fields.</li>
+          <li>Document minimum note/lyric mapping semantics.</li>
+          <li>Publish 10 representative chant examples.</li>
+        </ul>
+
+        <h3>M2 — Round-trip stability</h3>
+        <ul>
+          <li>Implement and validate <code>gabc → chantxml → gabc</code> converter path on fixture corpus.</li>
+          <li>Track and classify lossy cases; add explicit metadata where needed.</li>
+        </ul>
+
+        <h3>M3 — TeX publishing bridge</h3>
+        <ul>
+          <li>Implement <code>chantxml → tex</code> aligned with GregorioTeX assumptions.</li>
+          <li>Document any unsupported notational constructs and fallback behavior.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Illustrative extension snippet (non-normative)</h2>
+        <pre><code>&lt;note chant:neume-id="n12" chant:neume-type="clivis" chant:source-token="(gh)"&gt;
+  &lt;pitch&gt;...&lt;/pitch&gt;
+  &lt;notations&gt;
+    &lt;chant:rhythmic-mark type="episema-horizontal" /&gt;
+  &lt;/notations&gt;
+  &lt;lyric chant:underlay-rule="extended-melisma"&gt;...&lt;/lyric&gt;
+&lt;/note&gt;</code></pre>
+        <p>
+          Exact element and attribute names will be finalized in the ChantXML profile draft.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
