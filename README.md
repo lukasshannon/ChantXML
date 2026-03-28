@@ -66,6 +66,8 @@ If code/assets are imported from external repositories, include:
 - `AGENTS.md` — instructions for coding agents and contributors (documentation-first workflow).
 - `docs/` — GitHub Pages root for documentation and browser-based tools.
   - `docs/index.html` — documentation landing page.
+  - `docs/musicxml-viewer.html` — in-browser MusicXML notation viewer.
+  - `docs/samples/twinkle-twinkle-little-star.musicxml` — sample MusicXML melody fixture.
 
 ## Documentation-first roadmap
 
@@ -78,6 +80,9 @@ If code/assets are imported from external repositories, include:
 ### Phase 1: ChantXML profile draft
 
 - Enumerate the smallest set of MusicXML extension points needed.
+- Document use of MusicXML `<staff-lines>` for four-line chant staves where appropriate.
+- Evaluate MusicXML `<solo/>` instrument metadata for solo-voice chant use cases.
+- Support movable chant clefs by allowing MusicXML `<sign>` values `C` and `F` with flexible `<line>` placement.
 - Provide normative mapping tables: GABC token ↔ ChantXML representation.
 - Add canonical examples with expected round-trip behavior.
 
