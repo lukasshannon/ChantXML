@@ -34,6 +34,9 @@
           <beats>4</beats>
           <beat-type>4</beat-type>
         </time>
+        <staff-details>
+          <staff-lines>4</staff-lines>
+        </staff-details>
         <clef>
           <sign>C</sign>
           <line>3</line>
