@@ -11,6 +11,17 @@ const xmlEditor = document.getElementById('xmlEditor');
 let osmd;
 const SMUFL_FONT_FAMILY = 'Bravura';
 const SMUFL_TEXT_FONT_FAMILY = 'Bravura Text';
+const SMUFL_FONT_SOURCES = {
+  [SMUFL_FONT_FAMILY]: [
+    'https://cdn.jsdelivr.net/npm/@vexflow-fonts/bravura@1.0.0/bravura.woff2',
+    'https://raw.githubusercontent.com/vexflow/vexflow-fonts/main/fonts/bravura/bravura.woff2',
+  ],
+  [SMUFL_TEXT_FONT_FAMILY]: [
+    'https://cdn.jsdelivr.net/npm/@vexflow-fonts/bravura@1.0.0/bravura-text.woff2',
+    'https://raw.githubusercontent.com/vexflow/vexflow-fonts/main/fonts/bravura/bravura-text.woff2',
+  ],
+};
+const loadedSmuflFonts = new Set();
 const SAMPLE_FILES = [
   { label: 'Frere Jacques', file: 'frere-jacques.musicxml' },
   { label: 'Mary Had a Little Lamb', file: 'mary-had-a-little-lamb.musicxml' },
@@ -49,14 +60,47 @@ async function ensureRenderer() {
 }
 
 async function ensureSmuflFontsLoaded() {
-  if (!document.fonts || typeof document.fonts.load !== 'function') {
+  if (!document.fonts || typeof document.fonts.load !== 'function' || typeof FontFace === 'undefined') {
     return;
+  }
+
+  async function loadFontFaceFamily(fontFamily) {
+    if (loadedSmuflFonts.has(fontFamily)) {
+      return;
+    }
+
+    const hasSystemFont = document.fonts.check(`16px "${fontFamily}"`);
+    if (hasSystemFont) {
+      loadedSmuflFonts.add(fontFamily);
+      return;
+    }
+
+    const candidateUrls = SMUFL_FONT_SOURCES[fontFamily] ?? [];
+    for (const url of candidateUrls) {
+      try {
+        const fontFace = new FontFace(fontFamily, `url(${url}) format("woff2")`, {
+          style: 'normal',
+          weight: '400',
+        });
+        await fontFace.load();
+        document.fonts.add(fontFace);
+        await document.fonts.load(`16px "${fontFamily}"`);
+        if (document.fonts.check(`16px "${fontFamily}"`)) {
+          loadedSmuflFonts.add(fontFamily);
+          return;
+        }
+      } catch (error) {
+        console.warn(`Failed loading ${fontFamily} from ${url}`, error);
+      }
+    }
+
+    throw new Error(`Could not load required SMuFL font family "${fontFamily}" from any configured source.`);
   }
 
   // Ensure SMuFL glyph and text companion fonts are loaded before rendering.
   await Promise.all([
-    document.fonts.load(`16px "${SMUFL_FONT_FAMILY}"`),
-    document.fonts.load(`16px "${SMUFL_TEXT_FONT_FAMILY}"`),
+    loadFontFaceFamily(SMUFL_FONT_FAMILY),
+    loadFontFaceFamily(SMUFL_TEXT_FONT_FAMILY),
   ]);
 }
 
