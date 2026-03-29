@@ -123,6 +123,7 @@
         <div class="button-row">
           <button id="loadSample" type="button">Load Twinkle sample</button>
           <button id="renderXml" type="button">Render XML</button>
+          <button id="chantifyXml" type="button">Convert to Gregorian Chant</button>
           <button id="resetView" type="button">Clear</button>
           <a href="./index.html">Back to docs home</a>
         </div>
@@ -136,93 +137,7 @@
       <section class="panel" id="score" aria-label="MusicXML rendering area"></section>
     </main>
 
-    <script>
-      const scoreContainer = document.getElementById('score');
-      const statusNode = document.getElementById('status');
-      const fileInput = document.getElementById('musicxmlFile');
-      const loadSampleButton = document.getElementById('loadSample');
-      const renderButton = document.getElementById('renderXml');
-      const resetButton = document.getElementById('resetView');
-      const xmlEditor = document.getElementById('xmlEditor');
+    <script src="./musicxml-viewer.js"></script>
 
-      let osmd;
-
-      function setStatus(message) {
-        statusNode.textContent = message;
-      }
-
-      async function ensureRenderer() {
-        if (!window.opensheetmusicdisplay || !window.opensheetmusicdisplay.OpenSheetMusicDisplay) {
-          throw new Error('OpenSheetMusicDisplay did not load.');
-        }
-
-        if (!osmd) {
-          osmd = new window.opensheetmusicdisplay.OpenSheetMusicDisplay(scoreContainer, {
-            autoResize: true,
-            drawTitle: true,
-          });
-        }
-      }
-
-      async function renderMusicXML(xmlText, description) {
-        if (!xmlText.trim()) {
-          setStatus('Editor is empty. Load or paste MusicXML first.');
-          return;
-        }
-
-        try {
-          await ensureRenderer();
-          await osmd.load(xmlText);
-          osmd.render();
-          setStatus(`Rendered ${description}.`);
-        } catch (error) {
-          console.error(error);
-          setStatus(`Could not render ${description}: ${error.message}`);
-        }
-      }
-
-      fileInput.addEventListener('change', async (event) => {
-        const [file] = event.target.files;
-        if (!file) {
-          return;
-        }
-
-        try {
-          const text = await file.text();
-          xmlEditor.value = text;
-          setStatus(`Loaded local file \"${file.name}\" into editor. Click Render XML.`);
-        } catch (error) {
-          console.error(error);
-          setStatus(`Could not read \"${file.name}\": ${error.message}`);
-        }
-      });
-
-      loadSampleButton.addEventListener('click', async () => {
-        setStatus('Loading Twinkle sample...');
-        try {
-          const response = await fetch('./samples/twinkle-twinkle-little-star.musicxml');
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-
-          xmlEditor.value = await response.text();
-          setStatus('Loaded Twinkle sample into editor. Click Render XML.');
-        } catch (error) {
-          console.error(error);
-          setStatus(`Could not load sample: ${error.message}`);
-        }
-      });
-
-      renderButton.addEventListener('click', async () => {
-        await renderMusicXML(xmlEditor.value, 'editor contents');
-      });
-
-      resetButton.addEventListener('click', () => {
-        scoreContainer.textContent = '';
-        fileInput.value = '';
-        xmlEditor.value = '';
-        setStatus('Cleared viewer and editor.');
-      });
-    </script>
   </body>
 </html>
