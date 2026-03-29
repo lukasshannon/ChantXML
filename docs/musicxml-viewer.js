@@ -105,10 +105,10 @@ function convertToGregorianChant(xmlText) {
   upsertTextElement(clef, 'sign', 'C');
   upsertTextElement(clef, 'line', '3');
 
-  const notes = Array.from(documentNode.querySelectorAll('note')).filter((note) => !note.querySelector('rest'));
+  const notes = Array.from(documentNode.querySelectorAll('note'));
   notes.forEach((note) => {
     let notehead = note.querySelector('notehead');
-    if (!notehead) {
+    if (!notehead && !note.querySelector('rest')) {
       notehead = documentNode.createElement('notehead');
       const typeNode = note.querySelector('type');
       if (typeNode) {
@@ -117,8 +117,11 @@ function convertToGregorianChant(xmlText) {
         note.appendChild(notehead);
       }
     }
-    notehead.textContent = 'other';
-    notehead.setAttribute('smufl', 'chantPunctum');
+
+    if (notehead) {
+      notehead.textContent = 'other';
+      notehead.setAttribute('smufl', 'chantPunctum');
+    }
   });
 
   const serializer = new XMLSerializer();
@@ -173,7 +176,7 @@ chantifyButton.addEventListener('click', () => {
 
   try {
     xmlEditor.value = convertToGregorianChant(xmlEditor.value);
-    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and SMuFL chant noteheads. Click Render XML.');
+    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and medieval SMuFL chant noteheads (chantPunctum). Click Render XML.');
   } catch (error) {
     console.error(error);
     setStatus(`Could not convert XML: ${error.message}`);
