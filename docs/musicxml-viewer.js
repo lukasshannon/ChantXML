@@ -64,7 +64,8 @@ async function ensureSmuflFontsLoaded() {
     return;
   }
 
-  async function loadFontFaceFamily(fontFamily) {
+  async function loadFontFaceFamily(fontFamily, options = {}) {
+    const { required = true } = options;
     if (loadedSmuflFonts.has(fontFamily)) {
       return;
     }
@@ -94,14 +95,18 @@ async function ensureSmuflFontsLoaded() {
       }
     }
 
+    if (!required) {
+      console.warn(`Optional SMuFL font family "${fontFamily}" is unavailable. Falling back to generic text fonts.`);
+      return;
+    }
+
     throw new Error(`Could not load required SMuFL font family "${fontFamily}" from any configured source.`);
   }
 
-  // Ensure SMuFL glyph and text companion fonts are loaded before rendering.
-  await Promise.all([
-    loadFontFaceFamily(SMUFL_FONT_FAMILY),
-    loadFontFaceFamily(SMUFL_TEXT_FONT_FAMILY),
-  ]);
+  // Ensure required SMuFL glyph font is loaded before rendering.
+  await loadFontFaceFamily(SMUFL_FONT_FAMILY, { required: true });
+  // Bravura Text improves lyric/text shaping but is optional for notation rendering.
+  await loadFontFaceFamily(SMUFL_TEXT_FONT_FAMILY, { required: false });
 }
 
 async function renderMusicXML(xmlText, description) {
