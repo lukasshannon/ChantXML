@@ -13,12 +13,14 @@ const SMUFL_FONT_FAMILY = 'Bravura';
 const SMUFL_TEXT_FONT_FAMILY = 'Bravura Text';
 const SMUFL_FONT_SOURCES = {
   [SMUFL_FONT_FAMILY]: [
-    'https://cdn.jsdelivr.net/npm/@vexflow-fonts/bravura@1.0.0/bravura.woff2',
-    'https://raw.githubusercontent.com/vexflow/vexflow-fonts/main/fonts/bravura/bravura.woff2',
+    './assets/fonts/bravura/bravura.woff2',
+    'https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.6/bravura/Bravura_1.392.woff2',
+    'https://unpkg.com/vexflow-fonts@1.0.6/bravura/Bravura_1.392.woff2',
   ],
   [SMUFL_TEXT_FONT_FAMILY]: [
-    'https://cdn.jsdelivr.net/npm/@vexflow-fonts/bravura@1.0.0/bravura-text.woff2',
-    'https://raw.githubusercontent.com/vexflow/vexflow-fonts/main/fonts/bravura/bravura-text.woff2',
+    './assets/fonts/bravura/bravura-text.woff2',
+    'https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.6/bravura/BravuraText_1.393.woff2',
+    'https://unpkg.com/vexflow-fonts@1.0.6/bravura/BravuraText_1.393.woff2',
   ],
 };
 const loadedSmuflFonts = new Set();
