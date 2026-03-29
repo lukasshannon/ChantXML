@@ -44,6 +44,8 @@ MusicXML is already a widely used interchange format in notation software. A cha
 We will integrate with or adapt ideas from these projects whenever practical, always preserving attribution, license notices, and upstream references:
 
 - [MusicXML 4.0 (W3C Community Group)](https://www.w3.org/2021/06/musicxml40/)
+- [MusicXML `<notehead>` reference (`smufl` support)](https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/notehead/)
+- [SMuFL plainchant single-note glyphs](https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-plainchant-single-note-forms.html)
 - [The Gregorio Project](https://gregorio-project.github.io/)
 - [GABC format documentation](https://gregorio-project.github.io/gabc/)
 - [GregorioTeX documentation](https://gregorio-project.github.io/gregoriotex/)
@@ -67,6 +69,7 @@ If code/assets are imported from external repositories, include:
 - `docs/` — GitHub Pages root for documentation and browser-based tools.
   - `docs/index.html` — documentation landing page.
   - `docs/musicxml-viewer.html` — in-browser MusicXML notation viewer.
+  - `docs/musicxml-viewer.js` — viewer logic including the chant conversion transform (4-line staff, C clef, SMuFL chant notehead metadata).
   - `docs/samples/twinkle-twinkle-little-star.musicxml` — sample MusicXML melody fixture.
 
 ## Documentation-first roadmap

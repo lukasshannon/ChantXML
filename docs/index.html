@@ -126,6 +126,8 @@ chantxml -> tex</code></pre>
         </p>
         <ul>
           <li><a href="https://www.w3.org/2021/06/musicxml40/">MusicXML 4.0</a></li>
+          <li><a href="https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/notehead/">MusicXML &lt;notehead&gt; reference (SMuFL attribute support)</a></li>
+          <li><a href="https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-plainchant-single-note-forms.html">SMuFL medieval and renaissance plainchant glyph table</a></li>
           <li><a href="https://gregorio-project.github.io/">Gregorio Project</a></li>
           <li><a href="https://gregorio-project.github.io/gabc/">GABC format</a></li>
           <li><a href="https://gregorio-project.github.io/gregoriotex/">GregorioTeX</a></li>
@@ -138,10 +140,43 @@ chantxml -> tex</code></pre>
         <h2>Browser tools</h2>
         <ul>
           <li>
-            <a href="./musicxml-viewer.html">MusicXML Viewer</a> — open local MusicXML files, edit XML directly, and load a built-in
-            <a href="./samples/twinkle-twinkle-little-star.musicxml">Twinkle, Twinkle, Little Star sample</a>.
+            <a href="./musicxml-viewer.html">MusicXML Viewer</a> — open local MusicXML files, edit XML directly, load a built-in
+            <a href="./samples/twinkle-twinkle-little-star.musicxml">Twinkle, Twinkle, Little Star sample</a>, and convert the current score to a chant-oriented MusicXML profile.
           </li>
         </ul>
+      </section>
+
+      <section>
+        <h2>Viewer chant conversion behavior</h2>
+        <p>
+          The viewer includes a <strong>Convert to Gregorian Chant</strong> button that updates the MusicXML in-place using minimal MusicXML features.
+        </p>
+        <h3>Input example (normal notation)</h3>
+        <pre><code>&lt;attributes&gt;
+  &lt;clef&gt;
+    &lt;sign&gt;G&lt;/sign&gt;
+    &lt;line&gt;2&lt;/line&gt;
+  &lt;/clef&gt;
+&lt;/attributes&gt;</code></pre>
+        <h3>Output example (chant-oriented notation)</h3>
+        <pre><code>&lt;attributes&gt;
+  &lt;staff-details&gt;&lt;staff-lines&gt;4&lt;/staff-lines&gt;&lt;/staff-details&gt;
+  &lt;clef&gt;
+    &lt;sign&gt;C&lt;/sign&gt;
+    &lt;line&gt;3&lt;/line&gt;
+  &lt;/clef&gt;
+&lt;/attributes&gt;
+&lt;notehead smufl="chantPunctum"&gt;other&lt;/notehead&gt;</code></pre>
+        <h3>Assumptions and edge cases</h3>
+        <ul>
+          <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
+          <li>Only pitched notes are updated to SMuFL chant noteheads; rests are left unchanged.</li>
+          <li>Rendering support for <code>smufl="chantPunctum"</code> depends on the notation font used by the renderer.</li>
+        </ul>
+        <h3>Round-trip expectations</h3>
+        <p>
+          This is a one-way viewer transform for exploration. A full <code>gabc -&gt; chantxml -&gt; gabc</code> round-trip converter is still planned and may treat notehead glyph metadata as optional display-level data.
+        </p>
       </section>
 
       <section>
