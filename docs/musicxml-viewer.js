@@ -16,7 +16,7 @@ const SAMPLE_FILES = [
   { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
 ];
-const SAMPLE_ROOT = './samples';
+const SAMPLE_ROOT = new URL('./samples/', window.location.href);
 
 if (sampleSelect) {
   SAMPLE_FILES.forEach((sample) => {
@@ -152,7 +152,7 @@ loadSampleButton.addEventListener('click', async () => {
   const sampleLabel = selectedSample ? selectedSample.label : selectedFile;
   setStatus(`Loading ${sampleLabel} sample...`);
   try {
-    const response = await fetch(`${SAMPLE_ROOT}/${selectedFile}`);
+    const response = await fetch(new URL(selectedFile, SAMPLE_ROOT));
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
