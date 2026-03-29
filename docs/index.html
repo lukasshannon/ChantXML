@@ -189,12 +189,12 @@ chantxml -> tex</code></pre>
     &lt;line&gt;3&lt;/line&gt;
   &lt;/clef&gt;
 &lt;/attributes&gt;
-&lt;notehead smufl="chantPunctum"&gt;other&lt;/notehead&gt;</code></pre>
+&lt;notehead smufl="chantPunctum" font-family="Bravura"&gt;other&lt;/notehead&gt;</code></pre>
         <h3>Assumptions and edge cases</h3>
         <ul>
           <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
-          <li>Every existing <code>&lt;notehead&gt;</code> is normalized to the medieval plainchant SMuFL glyph <code>smufl="chantPunctum"</code>; for pitched notes missing a notehead, one is inserted.</li>
-          <li>Rendering support for <code>smufl="chantPunctum"</code> depends on the notation font used by the renderer.</li>
+          <li>Every existing <code>&lt;notehead&gt;</code> is normalized to <code>other</code> with medieval plainchant SMuFL metadata <code>smufl="chantPunctum"</code> and a <code>font-family="Bravura"</code> hint; for pitched notes missing a notehead, one is inserted.</li>
+          <li>Renderer behavior still varies for <code>smufl</code> notehead overrides, but loading Bravura in the viewer plus font hinting improves compatibility in common web setups.</li>
         </ul>
         <h3>Round-trip expectations</h3>
         <p>
