@@ -14,12 +14,7 @@ permissions:
 jobs:
   enable-automerge:
     if: ${{
-      github.event.pull_request.draft == false &&
-      (
-        github.event.pull_request.user.login == 'codex[bot]' ||
-        github.event.pull_request.user.login == 'openai-codex[bot]' ||
-        github.event.pull_request.user.login == 'codex-agent[bot]'
-      )
+      github.event.pull_request.draft == false
       }}
     runs-on: ubuntu-latest
 
