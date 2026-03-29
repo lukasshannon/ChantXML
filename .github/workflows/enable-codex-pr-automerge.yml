@@ -1,0 +1,51 @@
+name: Enable auto-merge for Codex PRs
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-automerge:
+    if: ${{
+      github.event.pull_request.draft == false &&
+      (
+        github.event.pull_request.user.login == 'codex[bot]' ||
+        github.event.pull_request.user.login == 'openai-codex[bot]' ||
+        github.event.pull_request.user.login == 'codex-agent[bot]'
+      )
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enable auto-merge (squash)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pullRequestNodeId = context.payload.pull_request.node_id;
+
+            await github.graphql(
+              `mutation ($pullRequestId: ID!) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pullRequestId,
+                  mergeMethod: SQUASH
+                }) {
+                  pullRequest {
+                    number
+                    autoMergeRequest {
+                      enabledAt
+                      mergeMethod
+                    }
+                  }
+                }
+              }`,
+              { pullRequestId: pullRequestNodeId }
+            );
+
+            core.info(`Enabled auto-merge for PR #${context.payload.pull_request.number}.`);
