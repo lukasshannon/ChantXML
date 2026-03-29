@@ -132,6 +132,7 @@ Current repository focus is docs and planning. Immediate contributor tasks:
 - Prefer existing libraries/spec references over custom parsers when possible.
 - For each converter change, add at least one fixture test once code exists.
 - Keep documentation synchronized with behavior.
+- Codex-authored pull requests can be auto-merged automatically via `.github/workflows/enable-codex-pr-automerge.yml` when repository auto-merge is enabled.
 - Preserve attribution and license text for reused work.
 
 ## License
