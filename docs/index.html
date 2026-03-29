@@ -108,6 +108,7 @@
           <li>Minimally extend MusicXML rather than creating a new format.</li>
           <li>Support round-trip conversion with existing GABC chant corpora.</li>
           <li>Enable TeX-based chant publishing workflows (GregorioTeX compatible).</li>
+          <li>Target practical interchange with mainstream notation tools, including Dorico and Sibelius.</li>
           <li>Reuse existing open-source projects with full attribution.</li>
         </ul>
       </section>
@@ -146,10 +147,12 @@ chantxml -> tex</code></pre>
         <ul>
           <li><a href="https://www.w3.org/2021/06/musicxml40/">MusicXML 4.0</a></li>
           <li><a href="https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/notehead/">MusicXML &lt;notehead&gt; reference (SMuFL attribute support)</a></li>
+          <li><a href="https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-clefs.html">SMuFL medieval and renaissance clefs</a> (important for chant clef compatibility and usable in MusicXML via SMuFL-linked glyph metadata).</li>
           <li><a href="https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-plainchant-single-note-forms.html">SMuFL medieval and renaissance plainchant glyph table</a></li>
           <li><a href="https://gregorio-project.github.io/">Gregorio Project</a></li>
           <li><a href="https://gregorio-project.github.io/gabc/">GABC format</a></li>
           <li><a href="https://gregorio-project.github.io/gregoriotex/">GregorioTeX</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/TeXShop">TeXShop</a> (the intended LaTeX editor/program target for ChantXML-to-TeX output workflows).</li>
           <li><a href="http://gregobase.selapa.net/">GregoBase corpus</a></li>
         </ul>
       </section>
@@ -195,7 +198,7 @@ chantxml -> tex</code></pre>
           <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
           <li>Every existing <code>&lt;notehead&gt;</code> is normalized to <code>other</code> with medieval plainchant SMuFL metadata <code>smufl="chantPunctum"</code> and a <code>font-family="Bravura"</code> hint; for pitched notes missing a notehead, one is inserted.</li>
           <li>The viewer loads Bravura and Bravura Text before rendering and sets Bravura as the default notation font so SMuFL chant glyphs are available when the score is drawn.</li>
-          <li>Font loading uses runtime fallback URLs (jsDelivr first, GitHub fallback) and verifies each required family before rendering so SMuFL glyph lookups fail fast instead of silently substituting unrelated symbols.</li>
+          <li>Font loading uses runtime fallback URLs (jsDelivr first, GitHub fallback): Bravura (notation glyphs) is required for rendering, while Bravura Text is optional so rendering still works if only the text companion font is blocked.</li>
           <li>Renderer behavior can still vary across MusicXML engines for <code>smufl</code> notehead overrides, but explicit font loading plus font hinting improves compatibility in common web setups.</li>
         </ul>
         <h3>Round-trip expectations</h3>

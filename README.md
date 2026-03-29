@@ -14,6 +14,7 @@ This project prioritizes:
 
 - A **minimal** spec extension rather than inventing a brand-new format.
 - Reuse of established projects and parsers where possible.
+- Interchange with mainstream notation software workflows, including Dorico and Sibelius.
 - Proper attribution and license compliance for all borrowed/adapted code.
 
 ## Why MusicXML + a chant profile?
@@ -45,10 +46,12 @@ We will integrate with or adapt ideas from these projects whenever practical, al
 
 - [MusicXML 4.0 (W3C Community Group)](https://www.w3.org/2021/06/musicxml40/)
 - [MusicXML `<notehead>` reference (`smufl` support)](https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/notehead/)
+- [SMuFL medieval and renaissance clefs](https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-clefs.html) (an important chant asset, usable from MusicXML through SMuFL glyph metadata)
 - [SMuFL plainchant single-note glyphs](https://w3c.github.io/smufl/latest/tables/medieval-and-renaissance-plainchant-single-note-forms.html)
 - [The Gregorio Project](https://gregorio-project.github.io/)
 - [GABC format documentation](https://gregorio-project.github.io/gabc/)
 - [GregorioTeX documentation](https://gregorio-project.github.io/gregoriotex/)
+- [TeXShop](https://en.wikipedia.org/wiki/TeXShop) (target LaTeX editor/program for ChantXML-generated TeX workflows)
 - [LilyPond early music examples](https://lilypond.org/examples.html#Early-Music)
 - [Illuminare Score Editor](http://dev.illuminarepublications.com/gregorio/)
 - [Source & Summit chant editor](https://www.sourceandsummit.com/editor/alpha/)
