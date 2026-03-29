@@ -16,14 +16,16 @@ const SAMPLE_FILES = [
   { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
 ];
-const SAMPLE_ROOT = '../samples/musicxml';
+const SAMPLE_ROOT = './samples';
 
-SAMPLE_FILES.forEach((sample) => {
-  const option = document.createElement('option');
-  option.value = sample.file;
-  option.textContent = sample.label;
-  sampleSelect.appendChild(option);
-});
+if (sampleSelect) {
+  SAMPLE_FILES.forEach((sample) => {
+    const option = document.createElement('option');
+    option.value = sample.file;
+    option.textContent = sample.label;
+    sampleSelect.appendChild(option);
+  });
+}
 
 function setStatus(message) {
   statusNode.textContent = message;

@@ -70,7 +70,7 @@ If code/assets are imported from external repositories, include:
   - `docs/index.html` — documentation landing page.
   - `docs/musicxml-viewer.html` — in-browser MusicXML notation viewer.
   - `docs/musicxml-viewer.js` — viewer logic including sample-dropdown loading and the chant conversion transform (4-line staff, C clef, SMuFL chant notehead metadata).
-- `samples/musicxml/` — bundled public-domain MusicXML sample melodies for the viewer dropdown.
+- `docs/samples/` — bundled public-domain MusicXML sample melodies for the viewer dropdown.
 
 ## Documentation-first roadmap
 
