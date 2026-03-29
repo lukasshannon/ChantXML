@@ -9,6 +9,8 @@ const resetButton = document.getElementById('resetView');
 const xmlEditor = document.getElementById('xmlEditor');
 
 let osmd;
+const SMUFL_FONT_FAMILY = 'Bravura';
+const SMUFL_TEXT_FONT_FAMILY = 'Bravura Text';
 const SAMPLE_FILES = [
   { label: 'Frere Jacques', file: 'frere-jacques.musicxml' },
   { label: 'Mary Had a Little Lamb', file: 'mary-had-a-little-lamb.musicxml' },
@@ -40,8 +42,22 @@ async function ensureRenderer() {
     osmd = new window.opensheetmusicdisplay.OpenSheetMusicDisplay(scoreContainer, {
       autoResize: true,
       drawTitle: true,
+      defaultMusicFont: SMUFL_FONT_FAMILY,
+      defaultWordFontFamily: SMUFL_TEXT_FONT_FAMILY,
     });
   }
+}
+
+async function ensureSmuflFontsLoaded() {
+  if (!document.fonts || typeof document.fonts.load !== 'function') {
+    return;
+  }
+
+  // Ensure SMuFL glyph and text companion fonts are loaded before rendering.
+  await Promise.all([
+    document.fonts.load(`16px "${SMUFL_FONT_FAMILY}"`),
+    document.fonts.load(`16px "${SMUFL_TEXT_FONT_FAMILY}"`),
+  ]);
 }
 
 async function renderMusicXML(xmlText, description) {
@@ -51,6 +67,8 @@ async function renderMusicXML(xmlText, description) {
   }
 
   try {
+    setStatus(`Loading SMuFL fonts for ${description}...`);
+    await ensureSmuflFontsLoaded();
     await ensureRenderer();
     await osmd.load(xmlText);
     osmd.render();
