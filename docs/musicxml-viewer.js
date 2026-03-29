@@ -1,6 +1,7 @@
 const scoreContainer = document.getElementById('score');
 const statusNode = document.getElementById('status');
 const fileInput = document.getElementById('musicxmlFile');
+const sampleSelect = document.getElementById('sampleSelect');
 const loadSampleButton = document.getElementById('loadSample');
 const renderButton = document.getElementById('renderXml');
 const chantifyButton = document.getElementById('chantifyXml');
@@ -8,6 +9,21 @@ const resetButton = document.getElementById('resetView');
 const xmlEditor = document.getElementById('xmlEditor');
 
 let osmd;
+const SAMPLE_FILES = [
+  { label: 'Frere Jacques', file: 'frere-jacques.musicxml' },
+  { label: 'Mary Had a Little Lamb', file: 'mary-had-a-little-lamb.musicxml' },
+  { label: 'Ode to Joy', file: 'ode-to-joy.musicxml' },
+  { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
+  { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
+];
+const SAMPLE_ROOT = '../samples/musicxml';
+
+SAMPLE_FILES.forEach((sample) => {
+  const option = document.createElement('option');
+  option.value = sample.file;
+  option.textContent = sample.label;
+  sampleSelect.appendChild(option);
+});
 
 function setStatus(message) {
   statusNode.textContent = message;
@@ -124,18 +140,26 @@ fileInput.addEventListener('change', async (event) => {
 });
 
 loadSampleButton.addEventListener('click', async () => {
-  setStatus('Loading Twinkle sample...');
+  const selectedFile = sampleSelect.value;
+  if (!selectedFile) {
+    setStatus('Choose a sample from the dropdown first.');
+    return;
+  }
+
+  const selectedSample = SAMPLE_FILES.find((sample) => sample.file === selectedFile);
+  const sampleLabel = selectedSample ? selectedSample.label : selectedFile;
+  setStatus(`Loading ${sampleLabel} sample...`);
   try {
-    const response = await fetch('./samples/twinkle-twinkle-little-star.musicxml');
+    const response = await fetch(`${SAMPLE_ROOT}/${selectedFile}`);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     xmlEditor.value = await response.text();
-    setStatus('Loaded Twinkle sample into editor. Click Render XML.');
+    setStatus(`Loaded ${sampleLabel} into editor. Click Render XML.`);
   } catch (error) {
     console.error(error);
-    setStatus(`Could not load sample: ${error.message}`);
+    setStatus(`Could not load "${sampleLabel}": ${error.message}`);
   }
 });
 

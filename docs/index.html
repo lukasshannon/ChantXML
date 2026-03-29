@@ -68,6 +68,25 @@
         padding: 1rem;
       }
 
+      .tool-cta {
+        background: linear-gradient(130deg, #1c63d6, #0f4db8);
+        color: #ffffff;
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+      }
+
+      .tool-cta a {
+        display: inline-block;
+        margin-top: 0.75rem;
+        background: #ffffff;
+        color: #0f4db8;
+        text-decoration: none;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 0.55rem 1rem;
+      }
+
       code {
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
@@ -138,10 +157,14 @@ chantxml -> tex</code></pre>
 
       <section>
         <h2>Browser tools</h2>
+        <div class="tool-cta">
+          <h3>Try the MusicXML Viewer tool</h3>
+          <p>Open the editor to load built-in samples, edit MusicXML, and preview notation.</p>
+          <a href="./musicxml-viewer.html">Open MusicXML Viewer</a>
+        </div>
         <ul>
           <li>
-            <a href="./musicxml-viewer.html">MusicXML Viewer</a> — open local MusicXML files, edit XML directly, load a built-in
-            <a href="./samples/twinkle-twinkle-little-star.musicxml">Twinkle, Twinkle, Little Star sample</a>, and convert the current score to a chant-oriented MusicXML profile.
+            <a href="./musicxml-viewer.html">MusicXML Viewer</a> — open local MusicXML files, edit XML directly, load any of the bundled public-domain sample melodies, and convert the current score to a chant-oriented MusicXML profile.
           </li>
         </ul>
       </section>
