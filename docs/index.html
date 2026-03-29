@@ -193,7 +193,7 @@ chantxml -> tex</code></pre>
         <h3>Assumptions and edge cases</h3>
         <ul>
           <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
-          <li>Only pitched notes are updated to SMuFL chant noteheads; rests are left unchanged.</li>
+          <li>Every existing <code>&lt;notehead&gt;</code> is normalized to the medieval plainchant SMuFL glyph <code>smufl="chantPunctum"</code>; for pitched notes missing a notehead, one is inserted.</li>
           <li>Rendering support for <code>smufl="chantPunctum"</code> depends on the notation font used by the renderer.</li>
         </ul>
         <h3>Round-trip expectations</h3>
