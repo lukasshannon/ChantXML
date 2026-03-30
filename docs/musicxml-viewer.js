@@ -307,8 +307,11 @@ function convertToGregorianChant(xmlText) {
     }
 
     if (notehead) {
-      // Prefer explicit SMuFL glyph mapping for chant punctum noteheads.
-      notehead.textContent = 'other';
+      // OSMD currently parses notehead shape text but ignores notehead@smufl,
+      // and treats unsupported values like "other" as a normal round notehead.
+      // Use a supported square shape so the rendered output stays punctum-like,
+      // while still preserving chant SMuFL metadata for downstream tools.
+      notehead.textContent = 'square';
       notehead.setAttribute('smufl', 'chantPunctum');
       notehead.setAttribute('font-family', 'Bravura');
     }
@@ -366,7 +369,7 @@ chantifyButton.addEventListener('click', () => {
 
   try {
     xmlEditor.value = convertToGregorianChant(xmlEditor.value);
-    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and SMuFL chant punctum noteheads (chantPunctum) with Bravura font hinting. Click Render XML.');
+    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and punctum-like square noteheads carrying SMuFL metadata (smufl="chantPunctum") with Bravura font hinting. Click Render XML.');
   } catch (error) {
     console.error(error);
     setStatus(`Could not convert XML: ${error.message}`);
