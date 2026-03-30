@@ -2,6 +2,9 @@ const scoreContainer = document.getElementById('score');
 const statusNode = document.getElementById('status');
 const fileInput = document.getElementById('musicxmlFile');
 const sampleSelect = document.getElementById('sampleSelect');
+const noteGlyphSelect = document.getElementById('noteGlyphSelect');
+const glyphMetadata = document.getElementById('glyphMetadata');
+const glyphPreview = document.getElementById('glyphPreview');
 const loadSampleButton = document.getElementById('loadSample');
 const renderButton = document.getElementById('renderXml');
 const chantifyButton = document.getElementById('chantifyXml');
@@ -32,6 +35,13 @@ const SAMPLE_FILES = [
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
 ];
 const SAMPLE_ROOT = new URL('./samples/', window.location.href);
+const CHANT_GLYPH_CHOICES = [
+  { label: 'Punctum', smufl: 'chantPunctum', codePoint: 'U+E990', glyph: '\uE990' },
+  { label: 'Virga', smufl: 'chantVirga', codePoint: 'U+E994', glyph: '\uE994' },
+  { label: 'Quilisma', smufl: 'chantQuilisma', codePoint: 'U+E99B', glyph: '\uE99B' },
+  { label: 'Oriscus', smufl: 'chantOriscusAscending', codePoint: 'U+E99C', glyph: '\uE99C' },
+  { label: 'Stropha', smufl: 'chantStropha', codePoint: 'U+E9A4', glyph: '\uE9A4' },
+];
 
 if (sampleSelect) {
   SAMPLE_FILES.forEach((sample) => {
@@ -42,8 +52,39 @@ if (sampleSelect) {
   });
 }
 
+if (noteGlyphSelect) {
+  CHANT_GLYPH_CHOICES.forEach((choice) => {
+    const option = document.createElement('option');
+    option.value = choice.smufl;
+    option.textContent = `${choice.glyph} ${choice.label} (${choice.smufl})`;
+    option.dataset.codePoint = choice.codePoint;
+    option.dataset.glyph = choice.glyph;
+    noteGlyphSelect.appendChild(option);
+  });
+}
+
 function setStatus(message) {
   statusNode.textContent = message;
+}
+
+function updateGlyphPreview() {
+  if (!noteGlyphSelect || !glyphMetadata || !glyphPreview) {
+    return;
+  }
+
+  const selectedIndex = noteGlyphSelect.selectedIndex;
+  const selectedOption = noteGlyphSelect.options[selectedIndex];
+  if (!selectedOption || !selectedOption.value) {
+    glyphMetadata.textContent = 'Select a glyph to view the SMuFL name and code point.';
+    glyphPreview.textContent = '♪';
+    return;
+  }
+
+  const glyph = selectedOption.dataset.glyph || '♪';
+  const smuflName = selectedOption.value;
+  const codePoint = selectedOption.dataset.codePoint || 'unknown';
+  glyphPreview.textContent = glyph;
+  glyphMetadata.textContent = `Selected ${smuflName} (${codePoint}). Use this with MusicXML notehead smufl="${smuflName}".`;
 }
 
 async function ensureRenderer() {
@@ -262,5 +303,14 @@ resetButton.addEventListener('click', () => {
   scoreContainer.textContent = '';
   fileInput.value = '';
   xmlEditor.value = '';
+  if (noteGlyphSelect) {
+    noteGlyphSelect.value = '';
+  }
+  updateGlyphPreview();
   setStatus('Cleared viewer and editor.');
 });
+
+if (noteGlyphSelect) {
+  noteGlyphSelect.addEventListener('change', updateGlyphPreview);
+}
+updateGlyphPreview();
