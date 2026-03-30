@@ -197,6 +197,7 @@ chantxml -> tex</code></pre>
         <ul>
           <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
           <li>Every existing <code>&lt;notehead&gt;</code> is normalized to <code>other</code> with medieval plainchant SMuFL metadata <code>smufl="chantPunctum"</code> and a <code>font-family="Bravura"</code> hint; for pitched notes missing a notehead, one is inserted.</li>
+          <li>The viewer includes a persistent on-page <code>chantPunctum</code> (U+E990) demo chip plus a runtime canvas verification message so you can confirm the glyph renders distinctly from fallback characters before rendering a score.</li>
           <li>The viewer loads Bravura and Bravura Text before rendering and sets Bravura as the default notation font so SMuFL chant glyphs are available when the score is drawn.</li>
           <li>Font loading is local-first: the viewer checks <code>docs/assets/fonts/bravura/</code> before CDN fallback URLs, supporting offline/self-hosted deployments where external font URLs may be blocked.</li>
           <li>Bundled font attribution and license metadata are tracked in <code>docs/assets/fonts/bravura/README.md</code> and <code>docs/assets/fonts/bravura/LICENSE.txt</code>.</li>
