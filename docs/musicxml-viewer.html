@@ -118,6 +118,12 @@
       .small {
         font-size: 0.95rem;
       }
+
+      .glyph-preview {
+        font-family: "Bravura Text", "Bravura", serif;
+        font-size: 1.75rem;
+        margin: 0.25rem 0 0;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.9.0/build/opensheetmusicdisplay.min.js"></script>
   </head>
@@ -141,6 +147,12 @@
         <select id="sampleSelect">
           <option value="">Select a sample...</option>
         </select>
+        <label for="noteGlyphSelect">SMuFL plainchant glyph picker</label>
+        <select id="noteGlyphSelect" style="font-family:'Bravura Text','Bravura',serif;">
+          <option value="">Select a chant glyph...</option>
+        </select>
+        <p class="small" id="glyphMetadata">Select a glyph to view the SMuFL name and code point.</p>
+        <p class="glyph-preview" id="glyphPreview" aria-live="polite">♪</p>
 
         <div class="button-row">
           <button id="loadSample" type="button">Load Selected Sample</button>
