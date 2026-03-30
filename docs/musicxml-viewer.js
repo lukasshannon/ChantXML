@@ -10,6 +10,9 @@ const renderButton = document.getElementById('renderXml');
 const chantifyButton = document.getElementById('chantifyXml');
 const resetButton = document.getElementById('resetView');
 const xmlEditor = document.getElementById('xmlEditor');
+const chantpunctumGlyph = document.getElementById('chantpunctumGlyph');
+const chantpunctumStatus = document.getElementById('chantpunctumStatus');
+const chantpunctumCheck = document.getElementById('chantpunctumCheck');
 
 let osmd;
 const SMUFL_FONT_FAMILY = 'Bravura';
@@ -87,6 +90,80 @@ function updateGlyphPreview() {
   glyphMetadata.textContent = `Selected ${smuflName} (${codePoint}). Use this with MusicXML notehead smufl="${smuflName}".`;
 }
 
+function updateChantpunctumDemo(isLoaded, isVerifiedVisible = null) {
+  if (!chantpunctumGlyph || !chantpunctumStatus || !chantpunctumCheck) {
+    return;
+  }
+
+  chantpunctumGlyph.textContent = '\uE990';
+  if (isLoaded) {
+    chantpunctumStatus.textContent = 'Bravura loaded — chantPunctum (U+E990) should be visible at left.';
+  } else {
+    chantpunctumStatus.textContent = 'Bravura not yet available — glyph may show as fallback until loading finishes.';
+  }
+
+  if (isVerifiedVisible === true) {
+    chantpunctumCheck.textContent = 'Verification check: chantpunctum glyph rendering confirmed.';
+  } else if (isVerifiedVisible === false) {
+    chantpunctumCheck.textContent = 'Verification check: glyph did not render distinctly from fallback.';
+  } else {
+    chantpunctumCheck.textContent = 'Verification pending.';
+  }
+}
+
+function hasVisibleInk(imageData) {
+  const data = imageData.data;
+  for (let i = 3; i < data.length; i += 4) {
+    if (data[i] !== 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function canVerifyGlyphInCanvas() {
+  return typeof document !== 'undefined' && typeof HTMLCanvasElement !== 'undefined';
+}
+
+function verifyChantpunctumVisible() {
+  if (!canVerifyGlyphInCanvas()) {
+    return null;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 96;
+  canvas.height = 96;
+  const context = canvas.getContext('2d');
+  if (!context) {
+    return null;
+  }
+
+  const drawGlyph = (char, family) => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = `64px "${family}", serif`;
+    context.textBaseline = 'alphabetic';
+    context.fillStyle = '#000';
+    context.fillText(char, 8, 72);
+    return context.getImageData(0, 0, canvas.width, canvas.height);
+  };
+
+  const punctum = drawGlyph('\uE990', SMUFL_FONT_FAMILY);
+  if (!hasVisibleInk(punctum)) {
+    return false;
+  }
+
+  const replacement = drawGlyph('\uFFFD', SMUFL_FONT_FAMILY);
+  const punctumData = punctum.data;
+  const replacementData = replacement.data;
+  for (let index = 0; index < punctumData.length; index += 1) {
+    if (punctumData[index] !== replacementData[index]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 async function ensureRenderer() {
   if (!window.opensheetmusicdisplay || !window.opensheetmusicdisplay.OpenSheetMusicDisplay) {
     throw new Error('OpenSheetMusicDisplay did not load.');
@@ -150,6 +227,7 @@ async function ensureSmuflFontsLoaded() {
   await loadFontFaceFamily(SMUFL_FONT_FAMILY, { required: true });
   // Bravura Text improves lyric/text shaping but is optional for notation rendering.
   await loadFontFaceFamily(SMUFL_TEXT_FONT_FAMILY, { required: false });
+  updateChantpunctumDemo(true, verifyChantpunctumVisible());
 }
 
 async function renderMusicXML(xmlText, description) {
@@ -314,3 +392,8 @@ if (noteGlyphSelect) {
   noteGlyphSelect.addEventListener('change', updateGlyphPreview);
 }
 updateGlyphPreview();
+updateChantpunctumDemo(document.fonts ? document.fonts.check(`16px "${SMUFL_FONT_FAMILY}"`) : false, null);
+ensureSmuflFontsLoaded().catch((error) => {
+  console.warn('Could not fully preload SMuFL fonts on startup.', error);
+  updateChantpunctumDemo(false, null);
+});

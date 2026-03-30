@@ -124,6 +124,30 @@
         font-size: 1.75rem;
         margin: 0.25rem 0 0;
       }
+
+      .chantpunctum-demo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        margin-top: 0.35rem;
+        padding: 0.45rem 0.7rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+      }
+
+      .chantpunctum-glyph {
+        font-family: "Bravura", "Bravura Text", serif;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .chantpunctum-check {
+        font-size: 0.9rem;
+        color: var(--muted);
+        width: 100%;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.9.0/build/opensheetmusicdisplay.min.js"></script>
   </head>
@@ -153,6 +177,12 @@
         </select>
         <p class="small" id="glyphMetadata">Select a glyph to view the SMuFL name and code point.</p>
         <p class="glyph-preview" id="glyphPreview" aria-live="polite">♪</p>
+        <p class="small">Live chantpunctum glyph check:</p>
+        <div class="chantpunctum-demo" id="chantpunctumDemo" aria-live="polite">
+          <span class="chantpunctum-glyph" id="chantpunctumGlyph">&#xE990;</span>
+          <span id="chantpunctumStatus">Loading Bravura for chantpunctum…</span>
+          <span class="chantpunctum-check" id="chantpunctumCheck">Verification pending.</span>
+        </div>
 
         <div class="button-row">
           <button id="loadSample" type="button">Load Selected Sample</button>

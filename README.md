@@ -72,7 +72,7 @@ If code/assets are imported from external repositories, include:
 - `docs/` — GitHub Pages root for documentation and browser-based tools.
   - `docs/index.html` — documentation landing page.
 - `docs/musicxml-viewer.html` — in-browser MusicXML notation viewer.
-- `docs/musicxml-viewer.js` — viewer logic including sample-dropdown loading, a plainchant SMuFL glyph picker (with `smufl` names/code points for quick notehead metadata lookup), and the chant conversion transform (4-line staff, C clef, and SMuFL chant punctum notehead normalization via `smufl="chantPunctum"`, plus explicit Bravura/Bravura Text preloading with local-first runtime fallback URLs and OSMD default font configuration for more reliable SMuFL rendering).
+- `docs/musicxml-viewer.js` — viewer logic including sample-dropdown loading, a plainchant SMuFL glyph picker (with `smufl` names/code points for quick notehead metadata lookup), a persistent on-page `chantPunctum` (`U+E990`) visibility demo chip with runtime glyph-verification messaging, and the chant conversion transform (4-line staff, C clef, and SMuFL chant punctum notehead normalization via `smufl="chantPunctum"`, plus explicit Bravura/Bravura Text preloading with local-first runtime fallback URLs and OSMD default font configuration for more reliable SMuFL rendering).
 - `docs/assets/fonts/bravura/` — local drop-in directory for Bravura/Bravura Text SMuFL fonts and license metadata (`vexflow-fonts@1.0.6`) that the viewer checks before CDN fallbacks.
 - `docs/samples/` — bundled public-domain MusicXML sample melodies for the viewer dropdown.
 
