@@ -15,8 +15,10 @@ const chantpunctumStatus = document.getElementById('chantpunctumStatus');
 const chantpunctumCheck = document.getElementById('chantpunctumCheck');
 
 let osmd;
+let attemptedOsmdNpmFallback = false;
 const SMUFL_FONT_FAMILY = 'Bravura';
 const SMUFL_TEXT_FONT_FAMILY = 'Bravura Text';
+const OSMD_NPM_FALLBACK_URL = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.9.0/build/opensheetmusicdisplay.min.js';
 const SMUFL_FONT_SOURCES = {
   [SMUFL_FONT_FAMILY]: [
     './assets/fonts/bravura/bravura.woff2',
@@ -179,6 +181,26 @@ async function ensureRenderer() {
   }
 }
 
+function shouldFallbackOsmd(error) {
+  const message = String(error?.message || '');
+  return message.includes('Stave is not a constructor');
+}
+
+async function loadOsmdNpmFallback() {
+  if (window.opensheetmusicdisplay?.OpenSheetMusicDisplay && attemptedOsmdNpmFallback) {
+    return;
+  }
+
+  await new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = OSMD_NPM_FALLBACK_URL;
+    script.async = false;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load npm OSMD fallback script.'));
+    document.head.appendChild(script);
+  });
+}
+
 async function ensureSmuflFontsLoaded() {
   if (!document.fonts || typeof document.fonts.load !== 'function' || typeof FontFace === 'undefined') {
     return;
@@ -244,6 +266,24 @@ async function renderMusicXML(xmlText, description) {
     osmd.render();
     setStatus(`Rendered ${description}.`);
   } catch (error) {
+    if (!attemptedOsmdNpmFallback && shouldFallbackOsmd(error)) {
+      attemptedOsmdNpmFallback = true;
+      osmd = null;
+      try {
+        setStatus('Forked OSMD failed at runtime, loading npm fallback...');
+        await loadOsmdNpmFallback();
+        await ensureRenderer();
+        await osmd.load(xmlText);
+        osmd.render();
+        setStatus(`Rendered ${description} (npm OSMD fallback).`);
+        return;
+      } catch (fallbackError) {
+        console.error(fallbackError);
+        setStatus(`Could not render ${description}: ${fallbackError.message}`);
+        return;
+      }
+    }
+
     console.error(error);
     setStatus(`Could not render ${description}: ${error.message}`);
   }
