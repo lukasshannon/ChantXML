@@ -38,6 +38,10 @@ const SAMPLE_FILES = [
   { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
   { label: 'Chant SMuFL Minimal Synthetic', file: 'chant-smufl-minimal.musicxml' },
+  { label: 'Chant SMuFL Virga Minimal', file: 'chant-smufl-virga-minimal.musicxml' },
+  { label: 'Chant SMuFL Quilisma Minimal', file: 'chant-smufl-quilisma-minimal.musicxml' },
+  { label: 'Chant SMuFL Oriscus Ascending Minimal', file: 'chant-smufl-oriscusascending-minimal.musicxml' },
+  { label: 'Chant SMuFL Stropha Minimal', file: 'chant-smufl-stropha-minimal.musicxml' },
   { label: 'Chant SMuFL Punctum Demo', file: 'chant-smufl-punctum.musicxml' },
   { label: 'Chant SMuFL Direct Demo', file: 'chant-smufl-direct.musicxml' },
 ];
