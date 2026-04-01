@@ -1,19 +1,30 @@
 # Internal status memo (April 1, 2026)
 
-## Already implemented
-- `opensheetmusicdisplay` `develop` parses `notehead@smufl` and maps chant noteheads to VexFlow glyph codes.
-- ChantXML viewer preloads Bravura fonts and includes chant sample tooling.
+## Current truth across both repositories
 
-## Workaround state before this update
-- ChantXML viewer was pinned to OSMD `1.9.6` and rewrote chant noteheads to `square` as fallback.
+### Already implemented (confirmed)
+- `opensheetmusicdisplay` `develop` reads MusicXML `notehead@smufl` into OSMD note data (`Note.CustomNoteheadVFCode`) and applies that code to VexFlow noteheads during graphical rendering.
+- ChantXML viewer (`docs/musicxml-viewer.html` + `.js`) loads the OSMD fork from `lukasshannon/opensheetmusicdisplay@develop` by default.
+- ChantXML viewer includes explicit sample fixtures for direct chant SMuFL noteheads, including `chant-smufl-minimal.musicxml` and `chant-smufl-direct.musicxml`.
 
-## Unverified / missing before this update
-- End-to-end confirmation that SMuFL notehead mapping survived all the way into VexFlow v5 notehead rendering.
-- Build stability in OSMD fork (TypeScript namespace breakages from VexFlow v5 migration).
-- Case-insensitive handling for `notehead@smufl` names in parser-to-render mapping.
-- A minimal synthetic chant fixture with direct `smufl="chantPunctum"` encoding for reproducible checks.
+### Explicit workaround behavior (intentionally retained)
+- The viewer still offers an opt-in compatibility checkbox that rewrites noteheads to `square` while keeping `smufl="chantPunctum"` metadata.
+- This fallback is no longer the default rendering path; it is a documented compatibility mode for stable upstream OSMD behavior.
 
-## Desired architecture
+### Recently closed verification gaps
+- Added a regression fixture and parser test in OSMD for mixed-case `notehead@smufl` values (for example `ChAnTpUnCtUm`) to guarantee robust name normalization before glyph mapping.
+- Added explicit Notehead unit tests for all supported chant SMuFL notehead names, mixed-case variants, and unknown-name fallback to `undefined`.
+- Added one-note minimal viewer fixtures for each supported chant glyph (`chantVirga`, `chantQuilisma`, `chantOriscusAscending`, `chantStropha`) to complement the existing `chantPunctum` sample.
+
+### Active tasks now being tackled
+- Stabilize the OSMD fork TypeScript build against VexFlow 5 namespace/type changes so `npm run build` and `npm test` can run cleanly.
+- Run end-to-end manual glyph verification for all five supported chant single-note SMuFL forms with compatibility mode toggled on/off.
+
+### Remaining risk areas
+- Browser-level visual snapshots are still manual in this repo (no screenshot CI harness yet).
+- Chant neume grouping beyond single-note forms (ligatures, episema variants, advanced spacing rules) remains outside this specific single-note SMuFL notehead milestone.
+
+## Final desired architecture (unchanged)
 - Primary path: ChantXML viewer loads OSMD fork (`develop`) and renders chant noteheads directly from MusicXML `notehead@smufl`.
-- Optional fallback path: explicit compatibility mode rewrites noteheads to `square` for stable upstream behavior.
-- Regression checks include parser + rendering-path assertions for chant noteheads.
+- Optional fallback path: deliberate compatibility mode rewrites noteheads to `square`.
+- Regression coverage includes parser mapping and rendering-path assignment checks in OSMD, plus reproducible ChantXML fixtures and manual verification steps.
