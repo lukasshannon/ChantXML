@@ -10,6 +10,8 @@
 ## Unverified / missing before this update
 - End-to-end confirmation that SMuFL notehead mapping survived all the way into VexFlow v5 notehead rendering.
 - Build stability in OSMD fork (TypeScript namespace breakages from VexFlow v5 migration).
+- Case-insensitive handling for `notehead@smufl` names in parser-to-render mapping.
+- A minimal synthetic chant fixture with direct `smufl="chantPunctum"` encoding for reproducible checks.
 
 ## Desired architecture
 - Primary path: ChantXML viewer loads OSMD fork (`develop`) and renders chant noteheads directly from MusicXML `notehead@smufl`.
