@@ -149,7 +149,7 @@
         width: 100%;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.9.6/build/opensheetmusicdisplay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/lukasshannon/opensheetmusicdisplay@develop/build/opensheetmusicdisplay.min.js"></script>
   </head>
   <body>
     <main>
@@ -171,6 +171,7 @@
         <select id="sampleSelect">
           <option value="">Select a sample...</option>
         </select>
+                <label><input id="compatSquareFallback" type="checkbox" /> Use compatibility square-notehead fallback (for stable OSMD-style behavior)</label>
         <label for="noteGlyphSelect">SMuFL plainchant glyph picker</label>
         <select id="noteGlyphSelect" style="font-family:'Bravura Text','Bravura',serif;">
           <option value="">Select a chant glyph...</option>
