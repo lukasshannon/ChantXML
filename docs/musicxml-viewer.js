@@ -37,6 +37,7 @@ const SAMPLE_FILES = [
   { label: 'Ode to Joy', file: 'ode-to-joy.musicxml' },
   { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
+  { label: 'Chant SMuFL Minimal Synthetic', file: 'chant-smufl-minimal.musicxml' },
   { label: 'Chant SMuFL Punctum Demo', file: 'chant-smufl-punctum.musicxml' },
   { label: 'Chant SMuFL Direct Demo', file: 'chant-smufl-direct.musicxml' },
 ];
