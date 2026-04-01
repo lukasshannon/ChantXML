@@ -13,6 +13,7 @@ const xmlEditor = document.getElementById('xmlEditor');
 const chantpunctumGlyph = document.getElementById('chantpunctumGlyph');
 const chantpunctumStatus = document.getElementById('chantpunctumStatus');
 const chantpunctumCheck = document.getElementById('chantpunctumCheck');
+const compatSquareFallback = document.getElementById('compatSquareFallback');
 
 let osmd;
 const SMUFL_FONT_FAMILY = 'Bravura';
@@ -36,6 +37,8 @@ const SAMPLE_FILES = [
   { label: 'Ode to Joy', file: 'ode-to-joy.musicxml' },
   { label: 'Row, Row, Row Your Boat', file: 'row-row-row-your-boat.musicxml' },
   { label: 'Twinkle, Twinkle, Little Star', file: 'twinkle-twinkle-little-star.musicxml' },
+  { label: 'Chant SMuFL Punctum Demo', file: 'chant-smufl-punctum.musicxml' },
+  { label: 'Chant SMuFL Direct Demo', file: 'chant-smufl-direct.musicxml' },
 ];
 const SAMPLE_ROOT = new URL('./samples/', window.location.href);
 const CHANT_GLYPH_CHOICES = [
@@ -307,11 +310,10 @@ function convertToGregorianChant(xmlText) {
     }
 
     if (notehead) {
-      // OSMD currently parses notehead shape text but ignores notehead@smufl,
-      // and treats unsupported values like "other" as a normal round notehead.
-      // Use a supported square shape so the rendered output stays punctum-like,
-      // while still preserving chant SMuFL metadata for downstream tools.
-      notehead.textContent = 'square';
+      const useCompatibilityFallback = Boolean(compatSquareFallback?.checked);
+      // Preferred path (OSMD fork): keep semantic SMuFL notehead metadata and normal notehead text.
+      // Compatibility path (stable OSMD): coerce to square for punctum-like rendering.
+      notehead.textContent = useCompatibilityFallback ? 'square' : 'normal';
       notehead.setAttribute('smufl', 'chantPunctum');
       notehead.setAttribute('font-family', 'Bravura');
     }
@@ -369,7 +371,7 @@ chantifyButton.addEventListener('click', () => {
 
   try {
     xmlEditor.value = convertToGregorianChant(xmlEditor.value);
-    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and punctum-like square noteheads carrying SMuFL metadata (smufl="chantPunctum") with Bravura font hinting. Click Render XML.');
+    setStatus('Updated editor to a Gregorian chant profile: four staff lines, C clef, and SMuFL chant noteheads (smufl="chantPunctum") with Bravura font hinting. Enable compatibility mode to coerce noteheads to square when needed.');
   } catch (error) {
     console.error(error);
     setStatus(`Could not convert XML: ${error.message}`);

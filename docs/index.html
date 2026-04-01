@@ -192,16 +192,16 @@ chantxml -> tex</code></pre>
     &lt;line&gt;3&lt;/line&gt;
   &lt;/clef&gt;
 &lt;/attributes&gt;
-&lt;notehead smufl="chantPunctum" font-family="Bravura"&gt;square&lt;/notehead&gt;</code></pre>
+&lt;notehead smufl="chantPunctum" font-family="Bravura"&gt;normal&lt;/notehead&gt;</code></pre>
         <h3>Assumptions and edge cases</h3>
         <ul>
           <li>The converter updates only the first measure's <code>&lt;attributes&gt;</code> block.</li>
-          <li>Every existing <code>&lt;notehead&gt;</code> is normalized to <code>square</code> with medieval plainchant SMuFL metadata <code>smufl="chantPunctum"</code> and a <code>font-family="Bravura"</code> hint; for pitched notes missing a notehead, one is inserted.</li>
+          <li>Every existing <code>&lt;notehead&gt;</code> is given chant SMuFL metadata <code>smufl="chantPunctum"</code> and a <code>font-family="Bravura"</code> hint while retaining standard notehead text; for pitched notes missing a notehead, one is inserted.</li>
           <li>The viewer includes a persistent on-page <code>chantPunctum</code> (U+E990) demo chip plus a runtime canvas verification message so you can confirm the glyph renders distinctly from fallback characters before rendering a score.</li>
           <li>The viewer loads Bravura and Bravura Text before rendering and sets Bravura as the default notation font so SMuFL chant glyphs are available when the score is drawn.</li>
           <li>Font loading is local-first: the viewer checks <code>docs/assets/fonts/bravura/</code> before CDN fallback URLs, supporting offline/self-hosted deployments where external font URLs may be blocked.</li>
           <li>Bundled font attribution and license metadata are tracked in <code>docs/assets/fonts/bravura/README.md</code> and <code>docs/assets/fonts/bravura/LICENSE.txt</code>.</li>
-          <li>OpenSheetMusicDisplay currently ignores <code>&lt;notehead smufl="..."&gt;</code> overrides and only maps a fixed set of MusicXML notehead shape text values, so this viewer uses the supported <code>square</code> shape as a punctum-like fallback while preserving the SMuFL metadata for downstream conversion tools.</li>
+          <li>Primary rendering path uses the <code>lukasshannon/opensheetmusicdisplay</code> <code>develop</code> fork, which consumes <code>&lt;notehead smufl="..."&gt;</code> for chant glyph selection. An explicit compatibility checkbox remains available to coerce noteheads to <code>square</code> for stable upstream OSMD behavior when needed.</li>
         </ul>
         <h3>Round-trip expectations</h3>
         <p>
