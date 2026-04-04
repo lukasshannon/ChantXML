@@ -181,8 +181,8 @@ async function ensureRenderer() {
     osmd = new window.opensheetmusicdisplay.OpenSheetMusicDisplay(scoreContainer, {
       autoResize: true,
       drawTitle: true,
-      defaultMusicFont: SMUFL_FONT_FAMILY,
-      defaultWordFontFamily: SMUFL_TEXT_FONT_FAMILY,
+      alwaysSetPreferredSkyBottomLineBackendAutomatically: false,
+      preferredSkyBottomLineBatchCalculatorBackend: 0,
     });
   }
 }
